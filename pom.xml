@@ -46,7 +46,7 @@
             <artifactId>basecommercesdk</artifactId>
             <version>5.1.91</version>
             <scope>system</scope>
-            <systemPath>${basedir}/lib/basecommerce-sdk-5.1.91.jar</systemPath>
+            <systemPath>${basedir}/basecommerce-sdk-5.1.91.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
