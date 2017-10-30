@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package com.fathomstudio.killbillbluepayplugin;
+package com.fathomstudio.killbillbasecommerceplugin;
 
 import org.killbill.billing.account.api.Account;
 import org.killbill.billing.account.api.AccountApiException;
@@ -38,13 +38,13 @@ import java.util.UUID;
 /**
  * Kill Bill events are listened to and handled here.
  */
-public class BluePayListener extends PluginConfigurationEventHandler implements OSGIKillbillEventDispatcher.OSGIKillbillEventHandler {
+public class BaseCommerceListener extends PluginConfigurationEventHandler implements OSGIKillbillEventDispatcher.OSGIKillbillEventHandler {
 	
-	private final LogService      logService;
+	private final LogService logService;
 	private final OSGIKillbillAPI osgiKillbillAPI;
 	
-	public BluePayListener(final OSGIKillbillLogService logService, final OSGIKillbillAPI killbillAPI, final OSGIKillbillDataSource dataSource) {
-		super(new BluePayPluginConfigurationHandler(BluePayActivator.PLUGIN_NAME, killbillAPI, logService, dataSource));
+	public BaseCommerceListener(final OSGIKillbillLogService logService, final OSGIKillbillAPI killbillAPI, final OSGIKillbillDataSource dataSource) {
+		super(new BluePayPluginConfigurationHandler(BaseCommerceActivator.PLUGIN_NAME, killbillAPI, logService, dataSource));
 		this.logService = logService;
 		this.osgiKillbillAPI = killbillAPI;
 	}
@@ -95,7 +95,7 @@ public class BluePayListener extends PluginConfigurationEventHandler implements 
 	//
 	private static class BluePayPluginConfigurationHandler extends PluginConfigurationHandler {
 		
-		private final LogService             logService;
+		private final LogService logService;
 		private final OSGIKillbillDataSource dataSource;
 		
 		public BluePayPluginConfigurationHandler(String pluginName, OSGIKillbillAPI osgiKillbillAPI, OSGIKillbillLogService osgiKillbillLogService, OSGIKillbillDataSource dataSource) {
@@ -117,25 +117,29 @@ public class BluePayListener extends PluginConfigurationEventHandler implements 
 			
 			String[] parts = properties.split(";");
 			
-			String accountId = parts[0];
-			String secretKey = parts[1];
-			Boolean test = Boolean.parseBoolean(parts[2]);
+			String username = parts[0];
+			String password = parts[1];
+			String key = parts[2];
+			Boolean test = Boolean.parseBoolean(parts[3]);
 			
-			logService.log(LogService.LOG_INFO, "configured with accountId: " + accountId);
-			logService.log(LogService.LOG_INFO, "configured with secretKey: " + secretKey);
+			logService.log(LogService.LOG_INFO, "configured with username: " + username);
+			logService.log(LogService.LOG_INFO, "configured with password: " + password);
+			logService.log(LogService.LOG_INFO, "configured with key: " + key);
 			logService.log(LogService.LOG_INFO, "configured with test: " + test);
 			
 			// save the details to the database
-			String credentialsQuery = "INSERT INTO `bluePay_credentials` (`tenantId`, `accountId`, `secretKey`, `test`) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE `tenantId` = ?, `accountId` = ?, `secretKey` = ?, `test` = ?";
+			String credentialsQuery = "INSERT INTO `baseCommerce_credentials` (`tenantId`, `username`, `password`, `key`, `test`) VALUES (?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE `tenantId` = ?, `username` = ?, `password` = ?, `key` = ?, `test` = ?";
 			try (PreparedStatement statement = dataSource.getDataSource().getConnection().prepareStatement(credentialsQuery)) {
 				statement.setString(1, kbTenantId.toString());
-				statement.setString(2, accountId);
-				statement.setString(3, secretKey);
-				statement.setBoolean(4, test);
-				statement.setString(5, kbTenantId.toString());
-				statement.setString(6, accountId);
-				statement.setString(7, secretKey);
-				statement.setBoolean(8, test);
+				statement.setString(2, username);
+				statement.setString(3, password);
+				statement.setString(4, key);
+				statement.setBoolean(5, test);
+				statement.setString(6, kbTenantId.toString());
+				statement.setString(7, username);
+				statement.setString(8, password);
+				statement.setString(9, key);
+				statement.setBoolean(10, test);
 				statement.executeUpdate();
 			} catch (SQLException e) {
 				logService.log(LogService.LOG_ERROR, "could not configure tenant: ", e);
