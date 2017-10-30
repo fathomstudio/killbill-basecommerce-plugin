@@ -6,7 +6,6 @@ lib/
 *.ear
 
 .idea
-*.iml
 target
 
 dependency-reduced-pom.xml
