@@ -345,8 +345,6 @@ public class BaseCommercePaymentPluginApi implements PaymentPluginApi {
 			throw new PaymentPluginApiException("unknown type: " + type, new IllegalArgumentException());
 		}
 		
-		
-		
 		// send response
 		final boolean finalSuccess = success;
 		final String finalMessage = message;
@@ -785,7 +783,7 @@ public class BaseCommercePaymentPluginApi implements PaymentPluginApi {
 		customer.put("email", account.getEmail());
 		bluePay.setCustomerInformation(customer);*/
 		
-		String token = null;
+		String token;
 		String type;
 		
 		// setup paymentType-specific payment details
@@ -813,9 +811,9 @@ public class BaseCommercePaymentPluginApi implements PaymentPluginApi {
 			
 			BankCard card = new BankCard();
 			card.setExpirationMonth(twoDigitMonth);
-			card.setExpirationYear(creditCardExpirationYear);
+			card.setExpirationYear("20" + creditCardExpirationYear);
 			card.setNumber(creditCardNumber);
-			card.setName("Card " + creditCardNumber.substring(11));
+			card.setName("Card " + creditCardNumber.substring(creditCardNumber.length() - 4));
 			try {
 				card = client.addBankCard(card);
 			} catch (BaseCommerceClientException e) {
@@ -827,6 +825,8 @@ public class BaseCommercePaymentPluginApi implements PaymentPluginApi {
 				for (String mess : card.getMessages()) {
 					message += mess + " ";
 				}
+				logService.log(LogService.LOG_ERROR, card.getExpirationMonth());
+				logService.log(LogService.LOG_ERROR, card.getExpirationYear());
 				logService.log(LogService.LOG_ERROR, "error while saving bank card: ", new Exception(message));
 				throw new PaymentPluginApiException("error while saving bank card", new Exception(message));
 			}
@@ -844,7 +844,7 @@ public class BaseCommercePaymentPluginApi implements PaymentPluginApi {
 			bank.setRoutingNumber(routingNumber);
 			bank.setAccountNumber(accountNumber);
 			bank.setType(BankAccount.XS_BA_TYPE_CHECKING);
-			bank.setName("Bank " + accountNumber.substring(11));
+			bank.setName("Bank " + accountNumber.substring(accountNumber.length() - 4));
 			try {
 				bank = client.addBankAccount(bank);
 			} catch (BaseCommerceClientException e) {

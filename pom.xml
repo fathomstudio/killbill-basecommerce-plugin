@@ -16,8 +16,7 @@
   ~ License for the specific language governing permissions and limitations
   ~ under the License.
   -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>killbill-oss-parent</artifactId>
@@ -42,11 +41,10 @@
     </issueManagement>
     <dependencies>
         <dependency>
-            <groupId>com.basecommerce</groupId>
+            <groupId>com.basecommercepay</groupId>
             <artifactId>basecommercesdk</artifactId>
             <version>5.1.91</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/basecommerce-sdk-5.1.91.jar</systemPath>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -117,6 +115,12 @@
             <artifactId>slf4j-api</artifactId>
         </dependency>
     </dependencies>
+    <repositories>
+        <repository>
+            <id>local</id>
+            <url>file:///home/chris13524/.m2/repository/</url>
+        </repository>
+    </repositories>
     <build>
         <plugins>
             <plugin>
@@ -133,14 +137,13 @@
                 </executions>
                 <configuration>
                     <instructions>
-                        <Bundle-Activator>com.fathomstudio.killbillbasecommerceplugin.BaseCommerceActivator
-                        </Bundle-Activator>
-                        <Export-Package/>
+                        <Bundle-Activator>com.fathomstudio.killbillbasecommerceplugin.BaseCommerceActivator</Bundle-Activator>
+                        <Export-Package />
                         <Private-Package>com.fathomstudio.killbillbasecommerceplugin.*</Private-Package>
                         <!-- Optional resolution because exported by the Felix system bundle -->
                         <Import-Package>javax.net;
-                            com.basecommercepay;
-                            com.basecommercepay.client;
+                            javax.crypto;
+                            javax.crypto.spec;
                             org.killbill.billing.account.api;
                             org.killbill.billing.catalog.api;
                             org.killbill.billing.invoice.api;
@@ -283,8 +286,7 @@
                             javax.naming;
                             org.osgi.service.log;
                             version="[0,3)",
-                            *;resolution:=optional
-                        </Import-Package>
+                            *;resolution:=optional</Import-Package>
                     </instructions>
                 </configuration>
             </plugin>
@@ -334,6 +336,9 @@
                             <filters>
                                 <filter>
                                     <artifact>${project.groupId}:${project.artifactId}</artifact>
+                                </filter>
+                                <filter>
+                                    <artifact>com.basecommercepay:basecommercesdk</artifact>
                                 </filter>
                             </filters>
                         </configuration>
