@@ -825,8 +825,6 @@ public class BaseCommercePaymentPluginApi implements PaymentPluginApi {
 				for (String mess : card.getMessages()) {
 					message += mess + " ";
 				}
-				logService.log(LogService.LOG_ERROR, card.getExpirationMonth());
-				logService.log(LogService.LOG_ERROR, card.getExpirationYear());
 				logService.log(LogService.LOG_ERROR, "error while saving bank card: ", new Exception(message));
 				throw new PaymentPluginApiException("error while saving bank card", new Exception(message));
 			}
