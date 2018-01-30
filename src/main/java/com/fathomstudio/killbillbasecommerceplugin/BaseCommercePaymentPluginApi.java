@@ -842,7 +842,7 @@ public class BaseCommercePaymentPluginApi implements PaymentPluginApi {
 			bank.setRoutingNumber(routingNumber);
 			bank.setAccountNumber(accountNumber);
 			bank.setType(BankAccount.XS_BA_TYPE_CHECKING);
-			bank.setName("Bank " + accountNumber.substring(accountNumber.length() - 4));
+			bank.setName("Bank " + (accountNumber.length() <= 4 ? accountNumber : accountNumber.substring(accountNumber.length() - 4)));
 			try {
 				bank = client.addBankAccount(bank);
 			} catch (BaseCommerceClientException e) {
