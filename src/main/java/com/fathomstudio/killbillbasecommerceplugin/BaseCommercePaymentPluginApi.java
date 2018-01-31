@@ -303,8 +303,10 @@ public class BaseCommercePaymentPluginApi implements PaymentPluginApi {
 				logService.log(LogService.LOG_ERROR, "could not make payment: ", e);
 			}
 			
+			logService.log(LogService.LOG_INFO, "transaction status: " + trans.getStatus());
+			logService.log(LogService.LOG_INFO, "transaction ID" + trans.getTransactionId());
+			
 			// check if we did OK
-			logService.log(LogService.LOG_INFO, trans.getStatus());
 			if (trans.isStatus(BankCardTransaction.XS_BCT_STATUS_FAILED)) {
 				success = false;
 				code = trans.getResponseCode();
@@ -332,6 +334,9 @@ public class BaseCommercePaymentPluginApi implements PaymentPluginApi {
 				logService.log(LogService.LOG_ERROR, "could not make payment: ", e);
 			}
 			
+			logService.log(LogService.LOG_INFO, "transaction status: " + trans.getStatus());
+			logService.log(LogService.LOG_INFO, "transaction ID" + trans.getMerchantTransactionID() + " " + trans.getRecurringTransactionID() + " " + trans.getBankAccountTransactionId() + " " + trans.getBankAccountTransactionLinkedId());
+			
 			// check if we did OK
 			if (trans.isStatus(BankAccountTransaction.XS_BAT_STATUS_FAILED)) {
 				String _message = "";
@@ -346,7 +351,7 @@ public class BaseCommercePaymentPluginApi implements PaymentPluginApi {
 			throw new PaymentPluginApiException("unknown type: " + type, new IllegalArgumentException());
 		}
 		
-		logService.log(LogService.LOG_INFO, "payment completed");
+		logService.log(LogService.LOG_INFO, "BC payment completed");
 		logService.log(LogService.LOG_INFO, "success: " + success);
 		logService.log(LogService.LOG_INFO, "message: " + message);
 		logService.log(LogService.LOG_INFO, "code: " + code);
