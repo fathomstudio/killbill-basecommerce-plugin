@@ -304,6 +304,7 @@ public class BaseCommercePaymentPluginApi implements PaymentPluginApi {
 			}
 			
 			// check if we did OK
+			logService.log(LogService.LOG_INFO, trans.getStatus());
 			if (trans.isStatus(BankCardTransaction.XS_BCT_STATUS_FAILED)) {
 				success = false;
 				code = trans.getResponseCode();
@@ -344,6 +345,11 @@ public class BaseCommercePaymentPluginApi implements PaymentPluginApi {
 		} else {
 			throw new PaymentPluginApiException("unknown type: " + type, new IllegalArgumentException());
 		}
+		
+		logService.log(LogService.LOG_INFO, "payment completed");
+		logService.log(LogService.LOG_INFO, "success: " + success);
+		logService.log(LogService.LOG_INFO, "message: " + message);
+		logService.log(LogService.LOG_INFO, "code: " + code);
 		
 		// send response
 		final boolean finalSuccess = success;
@@ -820,7 +826,7 @@ public class BaseCommercePaymentPluginApi implements PaymentPluginApi {
 				logService.log(LogService.LOG_ERROR, "error while saving bank card: ", e);
 				throw new PaymentPluginApiException("error while saving bank card", e);
 			}
-			if (card.isStatus(BankCard.XS_BC_STATUS_FAILED) ) {
+			if (card.isStatus(BankCard.XS_BC_STATUS_FAILED)) {
 				String message = "";
 				for (String mess : card.getMessages()) {
 					message += mess + " ";
@@ -849,7 +855,7 @@ public class BaseCommercePaymentPluginApi implements PaymentPluginApi {
 				logService.log(LogService.LOG_ERROR, "error while saving bank account: ", e);
 				throw new PaymentPluginApiException("error while saving bank account", e);
 			}
-			if (bank.isStatus(BankAccount.XS_BA_STATUS_FAILED) ) {
+			if (bank.isStatus(BankAccount.XS_BA_STATUS_FAILED)) {
 				String message = "";
 				for (String mess : bank.getMessages()) {
 					message += mess + " ";
