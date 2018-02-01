@@ -325,6 +325,7 @@ public class BaseCommercePaymentPluginApi implements PaymentPluginApi {
 				BankAccountTransaction trans = new BankAccountTransaction();
 				trans.setAmount(amount.doubleValue());
 				trans.setType(BankAccountTransaction.XS_BAT_TYPE_DEBIT);
+				trans.setMethod(BankAccountTransaction.XS_BAT_METHOD_WEB);
 				trans.setToken(token);
 				
 				// send the transaction to BC
