@@ -839,7 +839,7 @@ public class BaseCommercePaymentPluginApi implements PaymentPluginApi {
 					card = client.addBankCard(card);
 				} catch (BaseCommerceClientException e) {
 					logService.log(LogService.LOG_ERROR, "error while saving bank card: ", e);
-					throw new PaymentPluginApiException("error while saving bank card", e);
+					throw new PaymentPluginApiException("error while saving bank card: " + e.getMessage(), e);
 				}
 				if (card.isStatus(BankCard.XS_BC_STATUS_FAILED)) {
 					String message = "";
@@ -847,7 +847,7 @@ public class BaseCommercePaymentPluginApi implements PaymentPluginApi {
 						message += mess + " ";
 					}
 					logService.log(LogService.LOG_ERROR, "error while saving bank card: ", new Exception(message));
-					throw new PaymentPluginApiException("error while saving bank card", new Exception(message));
+					throw new PaymentPluginApiException("error while saving bank card: " + message, new Exception(message));
 				}
 				token = card.getToken();
 				type = TYPE_CARD;
@@ -868,7 +868,7 @@ public class BaseCommercePaymentPluginApi implements PaymentPluginApi {
 					bank = client.addBankAccount(bank);
 				} catch (BaseCommerceClientException e) {
 					logService.log(LogService.LOG_ERROR, "error while saving bank account: ", e);
-					throw new PaymentPluginApiException("error while saving bank account", e);
+					throw new PaymentPluginApiException("error while saving bank account: " + e.getMessage(), e);
 				}
 				if (bank.isStatus(BankAccount.XS_BA_STATUS_FAILED)) {
 					String message = "";
@@ -876,7 +876,7 @@ public class BaseCommercePaymentPluginApi implements PaymentPluginApi {
 						message += mess + " ";
 					}
 					logService.log(LogService.LOG_ERROR, "error while saving bank account: ", new Exception(message));
-					throw new PaymentPluginApiException("error while saving bank account", new Exception(message));
+					throw new PaymentPluginApiException("error while saving bank account: " + message, new Exception(message));
 				}
 				token = bank.getToken();
 				type = TYPE_BANK;
